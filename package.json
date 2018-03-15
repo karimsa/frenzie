@@ -39,7 +39,8 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.6.1"
+    "babel-preset-env": "^1.6.1",
+    "dot": "^1.1.2"
   },
   "dependencies": {
     "rc": "^1.2.6"
