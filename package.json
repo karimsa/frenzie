@@ -1,0 +1,47 @@
+{
+  "name": "frenzie",
+  "version": "0.0.0",
+  "description": "Make your node do crazy things.",
+  "main": "dist/frenzie/hooks.js",
+  "scripts": {
+    "test": "ava",
+    "build": "babel src -d dist -s"
+  },
+  "ava": {
+    "files": [
+      "test/*.test.js",
+      "test/**/*.test.js"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FoKo/frenzie.git"
+  },
+  "keywords": [
+    "chaos",
+    "chaos",
+    "engineering",
+    "crazy",
+    "testing",
+    "testing",
+    "library",
+    "mock"
+  ],
+  "author": "Karim Alibhai",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FoKo/frenzie/issues"
+  },
+  "homepage": "https://github.com/FoKo/frenzie#readme",
+  "optionalDependencies": {
+    "mongodb": "^3.0.4"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  },
+  "dependencies": {
+    "rc": "^1.2.6"
+  }
+}
