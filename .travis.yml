@@ -1,0 +1,19 @@
+language: node_js
+node_js:
+- 4
+- 6
+- 8
+script:
+ - npm test
+ - node_modules/.bin/codecov
+before_deploy:
+ - npm run build
+deploy:
+  provider: npm
+  email: karim@alibhai.co
+  skip_cleanup: true
+  api_key:
+    secure: L2awxCoQnVcShacGR3aWrA08IhLQhzAPCBjR0ukx1E1igTo0BRnp50Elo6sZl1Zq6eLMYDIZSfzNjtHLfqDZzYEUph6GxaBk4qQMAJIeRK7KnJpvuOcav4W+LnqYy9hLcNlJ2UkrDDuMyVRdcSqJp9/jNi0Ja9Sw5WoxDL0YFxAkfklrbs9Ic0zNyimHNKxGQJeNsRjiKW7JbGIsETO3BXcOVbhjMwQjwTiIhVvTdGrdRmNjgRRNE9T0Qj49WfOvLYlG11PAHNzanBUdv16L+41f4N6uX9VZ2lN/v9G4CeE7abSlal1VgZBAT+BNwqnpBQTCS+bNq20ztfLwfWXz9dg5XFLyPymoqy9SzgmpGsFf6ePnZl7d9dvqLs/ixcpLk9cu9E4yb4xoo0AItGagrjDbqA3QkM16DJBcQS8EMBfnv1+Vaj6vsyn/w/OO1D2hYmo2++Cjvqco6tL1HtcrCHYbVpZNAPE7060hUKNUK3wkDk4qBix6KtZrFbdqvC9Wct8eonk1HoFmH29R9i6plIR9CJNDFoNIE13OTB43f4UrNHBVo9PXUOQ/MGAq5wUZoVYB3XL2Sd3DHyHMsG0IMBWFHCPxA7I++mONeAIVLsLIF3qr4Pcs00jzWZBF3l1PfX/TkGcwi+JoJzIBT1quYp0V/5w33O2aX5tBPVjMbSE=
+  on:
+    tags: true
+    repo: karimsa/frenzie
