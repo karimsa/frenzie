@@ -41,9 +41,11 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "codecov": "^3.0.0",
-    "dot": "^1.1.2"
+    "dot": "^1.1.2",
+    "request": "^2.85.0"
   },
   "dependencies": {
+    "errno": "^0.1.7",
     "rc": "^1.2.6"
   }
 }

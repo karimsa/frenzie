@@ -9,7 +9,8 @@ const config = loadConfig()
 // When contributing, please add your new hooks below
 
 const MODULES = [
-  'mongodb',
+  'dns',
+  // 'mongodb',
 ]
 
 ///////////////////////////////////////
@@ -63,7 +64,7 @@ MODULES.forEach(mod => {
    * Verify that the target module exists - otherwise there's no point in
    * mocking. Also load it for the hook to use.
    */
-  const original = (function() {
+  const original = (function loadOriginalModule() {
     try {
       return require(mod)
     } catch (err) {

@@ -5,7 +5,7 @@
 
 import { test, reload, setConfig } from './helpers'
 
-test({
+test.skip({
   mongodb: false,
 }, async t => {
   const { MongoClient } = require('mongodb')
@@ -18,7 +18,7 @@ test({
   }))
 })
 
-test({
+test.skip({
   mongodb: true,
 }, async t => {
   const { MongoClient } = require('mongodb')
