@@ -1,6 +1,6 @@
 /**
  * @file test/helpers/test.js
- * @copyright 2018-present Foko Inc. All rights reserved.
+ * @copyright 2018-present Karim Alibhai. All rights reserved.
  */
 
 import test from 'ava'

@@ -3,20 +3,29 @@
  * @copyright 2018-present Karim Alibhai. All rights reserved.
  */
 
-import * as errors from './errors'
+import { resolvers as errors } from './errors'
 import { pickError, shouldError } from '../frenzie/utils'
 
-export default function factory(dns, options) {
+const defaults = {
+  threshold: .1,
+}
+
+export default function factory(dns, options = defaults) {
   function createFailingMethod(method, fn) {
-    return function (...args) {
+    return function (hostname, ...args) {
       const cb = args[args.length - 1]
 
-      if (typeof cb === 'function' && shouldError(options.threshold)) {
-        process.nextTick(() => cb(pickError(errors[method])))
+      if (
+        hostname &&
+        typeof cb === 'function' &&
+        shouldError(options.threshold)
+      ) {
+        const fail = pickError(errors[method])
+        process.nextTick(() => cb( fail(hostname) ))
         return
       }
 
-      return fn(...args)
+      return fn(hostname, ...args)
     }
   }
 

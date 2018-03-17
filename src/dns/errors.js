@@ -8,11 +8,11 @@ import { ok as assert } from 'assert'
 import * as errors from '../frenzie/errno'
 import { fakeStack } from '../frenzie/utils'
 
-const stack = fakeStack([
-  'at Object.lookup (dns.js:139:11)',
+const mkStack = method => fakeStack([
+  `at Object.${method} (dns.js:139:11)`,
 ])
 
-function createCaresError(cerr, syscall) {
+function createCaresError(cerr, method, syscall) {
   assert(cerr && cerr.code && cerr.description, 'valid error is required')
   assert(syscall, 'valid syscall is required')
 
@@ -22,7 +22,7 @@ function createCaresError(cerr, syscall) {
     // See: https://github.com/nodejs/node/blob/12b9ec09b0807a0b362986c80d3c4b9a644c611e/lib/internal/errors.js#L550
     const ex = new Error(`${syscall} ${err}${errHost}`)
 
-    ex.stack = ex.message + '\n' + stack
+    ex.stack = ex.message + '\n' + mkStack(method)
     ex.code = ex.errno = cerr.code
     ex.syscall = syscall
 
@@ -34,18 +34,18 @@ function createCaresError(cerr, syscall) {
   }
 }
 
-function createUvError(uverr, syscall) {
+function createUvError(uverr, method, syscall) {
   assert(uverr && uverr.code && uverr.description, 'valid error is required')
   assert(syscall, 'valid syscall is required')
 
   const code = uverr.code
   const ex = new Error(`${syscall} ${code}`)
 
-  ex.stack = ex.message + '\n' + stack
+  ex.stack = ex.message + '\n' + mkStack(method)
   ex.code = ex.errno = code
   ex.syscall = syscall
 
-  return ex
+  return () => ex
 }
 
 // Node.js uses c-ares for its `.resolve()` family of functions
@@ -54,32 +54,40 @@ const CARES_ERRORS = [
   errors.EAGAIN,
 ]
 
-function resolver(binding) {
-  return CARES_ERRORS.map(code => createCaresError(code, binding))
+function resolver(method, binding) {
+  return CARES_ERRORS.map(code => createCaresError(code, method, binding))
 }
 
-export const resolveAny = resolver('queryAny')
-export const resolve4 = resolver('queryA')
-export const resolve6 = resolver('queryAaaa')
-export const resolveCname = resolver('queryCname')
-export const resolveMx = resolver('queryMx')
-export const resolveNs = resolver('queryNs')
-export const resolveTxt = resolver('queryTxt')
-export const resolveSrv = resolver('querySrv')
-export const resolvePtr = resolver('queryPtr')
-export const resolveNaptr = resolver('queryNaptr')
-export const resolveSoa = resolver('querySoa')
-export const reverse = resolver('getHostByAddr')
+const resolvers = {
+  resolveAny: 'queryAny',
+  resolve4: 'queryA',
+  resolve6: 'queryAaaa',
+  resolveCname: 'queryCname',
+  resolveMx: 'queryMx',
+  resolveNs: 'queryNs',
+  resolveTxt: 'queryTxt',
+  resolveSrv: 'querySrv',
+  resolvePtr: 'queryPtr',
+  resolveNaptr: 'queryNaptr',
+  resolveSoa: 'querySoa',
+  reverse: 'getHostByAddr',
+}
+
+for (const method in resolvers) {
+  resolvers[method] = resolver(method, resolvers[method])
+}
 
 // For `.lookup()`s, Node.js uses libuv for which errors are handled
 // slightly differently
 // `.lookup()`: https://github.com/nodejs/node/blob/12b9ec09b0807a0b362986c80d3c4b9a644c611e/lib/dns.js#L141
-export const lookup = [
+resolvers.lookup = [
   errors.ENOTFOUND,
-].map(err => createUvError(err, 'getaddrinfo'))
+].map(err => createUvError(err, 'lookup', 'getaddrinfo'))
 
 // `.lookupService()` uses libuv
 // See: https://github.com/nodejs/node/blob/12b9ec09b0807a0b362986c80d3c4b9a644c611e/lib/dns.js#L182
-export const lookupService = [
+resolvers.lookupService = [
   errors.ENOTFOUND,
-].map(err => createUvError(err, 'getnameinfo'))
+].map(err => createUvError(err, 'lookupService', 'getnameinfo'))
+
+export { resolvers }

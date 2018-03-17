@@ -1,7 +1,7 @@
 /**
  * @file scripts/errno.js
  * @description Fork of 'node-errno' but up-to-date with the new libuv.
- * @copyright 2018-present Foko Inc. All rights reserved.
+ * @copyright 2018-present Karim Alibhai. All rights reserved.
  */
 
 const fs = require('fs')
