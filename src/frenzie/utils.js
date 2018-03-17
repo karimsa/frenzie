@@ -1,6 +1,6 @@
 /**
  * @file src/frenzie/utils.js
- * @copyright 2018-present Foko Inc. All rights reserved.
+ * @copyright 2018-present Karim Alibhai. All rights reserved.
  */
 
 const assert = require('assert')

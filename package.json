@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FoKo/frenzie.git"
+    "url": "git+https://github.com/karimsa/frenzie.git"
   },
   "keywords": [
     "chaos",
@@ -30,9 +30,9 @@
   "author": "Karim Alibhai",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/FoKo/frenzie/issues"
+    "url": "https://github.com/karimsa/frenzie/issues"
   },
-  "homepage": "https://github.com/FoKo/frenzie#readme",
+  "homepage": "https://github.com/karimsa/frenzie#readme",
   "optionalDependencies": {
     "mongodb": "^3.0.4"
   },
