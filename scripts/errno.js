@@ -8,9 +8,13 @@ const fs = require('fs')
 const path = require('path')
 const request = require('request')
 
-const projectRoot = 'https://raw.githubusercontent.com/libuv/libuv'
-const libuvH = projectRoot + '/v1.x/include/uv.h'
-const libuvErrnoH = projectRoot + '/v1.x/include/uv-errno.h'
+const uvRoot = 'https://raw.githubusercontent.com/libuv/libuv'
+const libuvH = uvRoot + '/v1.x/include/uv.h'
+const libuvErrnoH = uvRoot + '/v1.x/include/uv-errno.h'
+
+const aresRoot = 'https://raw.githubusercontent.com/c-ares/c-ares'
+const aresH = aresRoot + '/master/ares.h'
+const aresStrErrC = aresRoot + '/master/ares_strerror.c'
 
 // captures errno descriptions that look like this:
 //   XX(E2BIG, "argument list too long")
@@ -19,6 +23,14 @@ const errorDesc = /^\s*XX\((E[A-Z_0-9]+),\s*\"(.*)\"\)/
 // captures errno definitions that look like this:
 // #define UV__EAI_ADDRFAMILY  (-3000)
 const errorNo = /^#define\s*UV__(E[A-Z_0-9]+)\s*\((\-?[0-9]+)\)/
+
+// captures c-ares definitions like this:
+// #define ARES_ENODATA            1
+const caresErr = /^#define\s*(ARES_E[A-Z_0-9]+)\s*([0-9]+)/
+
+// captures c-ares string descriptions like this:
+//  "unknown",
+const caresStrErr = /^\s*"(.*)"(,?)\s*$/
 
 function getData(url) {
   return new Promise((resolve, reject) => {
@@ -60,6 +72,33 @@ function getData(url) {
 
       errorCodes[code].errno = parseInt(match[2], 10)
     })
+
+    const caresErrorList = (await getData(aresStrErrC))
+      .split('\n')
+      .map(line => line.match(caresStrErr))
+      .filter(Boolean)
+      .map(match => match[1])
+
+    ;(await getData(aresH))
+      .split('\n')
+      .map(line => line.match(caresErr))
+      .filter(Boolean)
+      .forEach(match => {
+        const code = match[1]
+        const errno = parseInt(match[2], 10)
+
+        const description = (
+          errno >= caresErrorList.length ?
+          'unknown' :
+          caresErrorList[errno]
+        )
+
+        errorCodes[code] = {
+          code,
+          errno,
+          description,
+        }
+      })
 
   // ENOTFOUND is a mistake that node made a while ago
   // and is still living with
