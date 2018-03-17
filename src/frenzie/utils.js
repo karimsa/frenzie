@@ -53,16 +53,20 @@ export function fakeStack(stack) {
 export function pickError(errors, CustomError = Error) {
   assert(Array.isArray(errors), 'must pass a valid array of errors')
 
-  const index = Math.round(Math.random() * errors.length) - 1
+  const index = Math.floor(Math.random() * errors.length)
   const error = errors[index]
 
   if (typeof error === 'string') {
     return new CustomError(error)
   }
 
+  if (error === undefined || error === null) {
+    throw new Error('Found nil error in error list')
+  }
+
   return error
 }
 
 export function shouldError(threshold = 0.5) {
-  return Math.random() > threshold
+  return Math.random() > (1 - threshold)
 }
