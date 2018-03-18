@@ -21,7 +21,7 @@ const modules = fs.readdirSync(srcdir)
   .filter(mod => mod !== 'frenzie' && fs.statSync(`${srcdir}/${mod}`).isDirectory())
 
 const out = tpl({
-  modules: modules.map(mod => ` - [${mod}](src/${mod})`),
+  modules: modules.map(mod => ` - [${mod}](src/${mod})`).join('\n'),
 })
 
 fs.writeFileSync(path.resolve(__dirname, '..', 'README.md'), out)
