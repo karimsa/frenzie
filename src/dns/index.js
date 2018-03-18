@@ -3,7 +3,7 @@
  * @copyright 2018-present Karim Alibhai. All rights reserved.
  */
 
-import { resolvers as errors } from './errors'
+import * as errors from './errors'
 import { pickError, shouldError } from '../frenzie/utils'
 
 const defaults = {
