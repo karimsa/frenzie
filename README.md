@@ -65,7 +65,7 @@ For the possible configurations for each module, see the table below:
 
 ## Supported Modules
 
- - [dns](src/dns)
+ - [dns](src/dns), - [mongodb](src/mongodb)
 
 ## License
 
