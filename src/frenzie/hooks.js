@@ -10,6 +10,8 @@ const config = loadConfig()
 
 const MODULES = [
   'dns',
+
+  'mongodb',
 ]
 
 ///////////////////////////////////////
