@@ -1,6 +1,6 @@
 /**
  * @file test/helpers/test.js
- * @copyright 2018-present Foko Inc. All rights reserved.
+ * @copyright 2018-present Karim Alibhai. All rights reserved.
  */
 
 import test from 'ava'
@@ -11,11 +11,11 @@ import { setConfig } from './config'
 
 const random = Math.random
 
-function testWrap(config, fn, isOnly = false) {
+function testWrap(config, fn, modifier) {
   assert(typeof config === 'object')
   assert(typeof fn === 'function')
 
-  const it = isOnly ? test.only : test
+  const it = modifier ? test[modifier] : test
 
   it(async t => {
     setConfig(config)
@@ -30,7 +30,11 @@ function testWrap(config, fn, isOnly = false) {
 }
 
 testWrap.only = function (config, fn) {
-  return testWrap(config, fn, true)
+  return testWrap(config, fn, 'only')
+}
+
+testWrap.skip = function (config, fn) {
+  return testWrap(config, fn, 'skip')
 }
 
 export default testWrap

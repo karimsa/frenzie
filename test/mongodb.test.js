@@ -1,11 +1,11 @@
 /**
  * @file test/mongodb.test.js
- * @copyright 2018-present Foko Inc. All rights reserved.
+ * @copyright 2018-present Karim Alibhai. All rights reserved.
  */
 
 import { test, reload, setConfig } from './helpers'
 
-test({
+test.skip({
   mongodb: false,
 }, async t => {
   const { MongoClient } = require('mongodb')
@@ -18,7 +18,7 @@ test({
   }))
 })
 
-test({
+test.skip({
   mongodb: true,
 }, async t => {
   const { MongoClient } = require('mongodb')
