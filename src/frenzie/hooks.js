@@ -9,6 +9,7 @@ const config = loadConfig()
 // When contributing, please add your new hooks below
 
 const MODULES = [
+  'buffer',
   'dns',
 ]
 
