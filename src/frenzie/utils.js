@@ -5,6 +5,10 @@
 
 const assert = require('assert')
 
+const DEFAULT_THRESHOLD = 0.5
+const DEFAULT_MAX_DELAY = 100
+const DEFAULT_MAX_TICKS = 1e9
+
 export function loadConfig() {
   const rc = require('rc')
   const config = rc('frenzie', {})
@@ -67,6 +71,47 @@ export function pickError(errors, CustomError = Error) {
   return error
 }
 
-export function shouldError(threshold = 0.5) {
+export function shouldError(threshold = DEFAULT_THRESHOLD) {
   return Math.random() > (1 - threshold)
+}
+
+export function later(maxDelay = DEFAULT_MAX_DELAY, what) {
+  setTimeout(what, Math.round( Math.random() * maxDelay ))
+}
+
+/**
+ * Wraps a method with a randomly slow method. But not always slow.
+ * @param {number} maxDelay maximum time to wait
+ * @param {Function} what function to wrap
+ */
+export function makeSlow(maxDelay, threshold, what) {
+  return function slowerMethod(...args) {
+    const that = this
+
+    if (shouldError(threshold)) {
+      return later(maxDelay, function () {
+        what.call(that, ...args)
+      })
+    }
+
+    return what.call(that, ...args)
+  }
+}
+
+/**
+ * Wraps a method with a randomly slow method. But not always slow.
+ * @param {number} maxDelay maximum time to wait
+ * @param {Function} what function to wrap
+ */
+export function makeSlowSync(ticks, threshold, what) {
+  return function slowerMethod(...args) {
+    const that = this
+    const ticks = Math.round( Math.random() * DEFAULT_MAX_TICKS )
+
+    if (shouldError(threshold)) {
+      for (let i = 0; i < ticks; ++i);
+    }
+
+    return what.call(that, ...args)
+  }
 }

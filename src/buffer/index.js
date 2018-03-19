@@ -3,7 +3,7 @@
  * @copyright 2018-present Foko Inc. All rights reserved.
  */
 
-import { shouldError } from '../frenzie/utils'
+import { shouldError, makeSlowSync } from '../frenzie/utils'
 
 const RANDOM_DATA = 'PASSWORD'
 
@@ -20,7 +20,7 @@ export default function factory(buffer, options = {}) {
   }
 
   function allocRandomly(method) {
-    return function (size) {
+    return makeSlowSync(options.maxTicks, options.threshold, function (size) {
       if (
         typeof size === 'number' &&
         size > 0 &&
@@ -30,7 +30,7 @@ export default function factory(buffer, options = {}) {
       }
 
       return method.call(Buffer, size)
-    }
+    })
   }
 
   if (typeof allocUnsafe === 'function') {
