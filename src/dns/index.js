@@ -4,7 +4,7 @@
  */
 
 import * as errors from './errors'
-import { pickError, shouldError } from '../frenzie/utils'
+import { pickError, shouldError, makeSlow } from '../frenzie/utils'
 
 const defaults = {
   threshold: .1,
@@ -12,7 +12,7 @@ const defaults = {
 
 export default function factory(dns, options = defaults) {
   function createFailingMethod(method, fn) {
-    return function (hostname, ...args) {
+    return makeSlow(options.maxDelay, options.threshold, function (hostname, ...args) {
       const cb = args[args.length - 1]
 
       if (
@@ -26,7 +26,7 @@ export default function factory(dns, options = defaults) {
       }
 
       return fn(hostname, ...args)
-    }
+    })
   }
 
   for (const method in errors) {
