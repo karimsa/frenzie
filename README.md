@@ -58,7 +58,7 @@ For the possible configurations for each module, see the table below:
 |-------------|---------|--------------------|-----------------------------------------------------|
 | `enabled`   | `false` | `true`, `false`    | Specifies whether to enable chaos for given module. |
 | `threshold` | `0.5`   | any number below 1 | The probability of something chaotic occuring.      |
-| `maxDelay`  | `50`    | any number         | Maximum amount of time to wait before actually doing something. Only used for asynchronous methods. |
+| `maxDelay`  | `100`   | any number         | Maximum amount of time to wait before actually doing something. Only used for asynchronous methods. |
 | `maxTicks`  | `1e9`   | any number         | Maximum number to synchronously count up to before actually doing something. Only used for sychronous methods. Warning: this is done using a `for(;;);` - it's going to hang the entire event loop. |
 
 ## Learn More

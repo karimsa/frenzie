@@ -6,7 +6,7 @@
 const assert = require('assert')
 
 const DEFAULT_THRESHOLD = 0.5
-const DEFAULT_MAX_DELAY = 50
+const DEFAULT_MAX_DELAY = 100
 const DEFAULT_MAX_TICKS = 1e9
 
 export function loadConfig() {
