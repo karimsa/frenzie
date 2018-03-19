@@ -5,12 +5,12 @@
 <h3 align="center">Run chaos stuff in Node.js.</h3>
 
 <p align="center">
-  <a href="https://travis-ci.com/karimsa/frenzie">
-    <img src="https://travis-ci.com/karimsa/frenzie.svg?token=bynzkcTP4XciV8soPs5e&branch=master" alt="Travis CI">
+  <a href="https://travis-ci.org/karimsa/frenzie">
+    <img src="https://travis-ci.org/karimsa/frenzie.svg?branch=master" alt="Travis CI">
   </a>
 
   <a href="https://codecov.io/gh/karimsa/frenzie">
-    <img src="https://codecov.io/gh/karimsa/frenzie/branch/master/graph/badge.svg?token=ZXBEfOj82y" />
+    <img src="https://codecov.io/gh/karimsa/frenzie/branch/master/graph/badge.svg">
   </a>
 
   <img src="https://img.shields.io/badge/chaotic-very-red.svg" alt="chaotic: very">
@@ -23,7 +23,6 @@
 **Table of Contents:**
 
  - [Configuration](#configuration)
- - [Learn More](#learn-more)
  - [Supported Modules](#supported-modules)
  - [License](#license)
 
@@ -60,10 +59,6 @@ For the possible configurations for each module, see the table below:
 | `threshold` | `0.5`   | any number below 1 | The probability of something chaotic occuring.      |
 | `maxDelay`  | `100`   | any number         | Maximum amount of time to wait before actually doing something. Only used for asynchronous methods. |
 | `maxTicks`  | `1e9`   | any number         | Maximum number to synchronously count up to before actually doing something. Only used for sychronous methods. Warning: this is done using a `for(;;);` - it's going to hang the entire event loop. |
-
-## Learn More
-
-`TODO.`
 
 ## Supported Modules
 
