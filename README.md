@@ -62,7 +62,6 @@ For the possible configurations for each module, see the table below:
 
 ## Supported Modules
 
- - [_http_client](src/_http_client)
  - [buffer](src/buffer)
  - [dns](src/dns)
 
