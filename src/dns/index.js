@@ -12,7 +12,7 @@ const defaults = {
 
 export default function factory(dns, options = defaults) {
   function createFailingMethod(method, fn) {
-    return makeSlow(options.maxDelay, options.threshold, function (hostname, ...args) {
+    return makeSlow(options.maxDelay, options.threshold, function dnsWrapper(hostname, ...args) {
       const cb = args[args.length - 1]
 
       if (
