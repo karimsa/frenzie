@@ -6,8 +6,13 @@
 const assert = require('assert')
 
 const DEFAULT_THRESHOLD = 0.5
-const DEFAULT_MAX_DELAY = 100
-const DEFAULT_MAX_TICKS = 1e9
+
+// these were originally created to avoid encouraging
+// race conditions when working with frenzie, but they're really
+// annoying so I'm disabling them till this problem actually shows
+// up
+const DEFAULT_MAX_DELAY = 0 // 100
+const DEFAULT_MAX_TICKS = 0 // 1e9
 
 export function loadConfig() {
   const rc = require('rc')
