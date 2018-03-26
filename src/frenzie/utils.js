@@ -7,6 +7,11 @@ const assert = require('assert')
 
 const DEFAULT_THRESHOLD = 0.5
 
+// this is approximately close to the stack size during
+// an http request made by a third-party library
+// i.e. request -> http -> net -> dns
+const MAX_STACK_SIZE = 20
+
 // these were originally created to avoid encouraging
 // race conditions when working with frenzie, but they're really
 // annoying so I'm disabling them till this problem actually shows
@@ -77,7 +82,17 @@ export function pickError(errors, CustomError = Error) {
 }
 
 export function shouldError(threshold = DEFAULT_THRESHOLD) {
-  return Math.random() > (1 - threshold)
+  const stack = String(new Error().stack).split('\n')
+
+  // the size of the stack trace should be inversely proportional to
+  // the probability of an error occurring - i.e. it should be more likely
+  // that an http error occurrs during an http request than a DNS error
+  // occurring
+  // this is to account for the fact that typically errors will be handled
+  // by the third-party library that the application is directly in contact
+  // with and then the application will receive a wrapped error - for instance,
+  // a dns timeout becomes a mongo network error when querying mongodb
+  return (stack.length / MAX_STACK_SIZE * Math.random()) > (1 - threshold)
 }
 
 export function later(maxDelay = DEFAULT_MAX_DELAY, what) {
