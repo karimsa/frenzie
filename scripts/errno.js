@@ -16,13 +16,16 @@ const aresRoot = 'https://raw.githubusercontent.com/c-ares/c-ares'
 const aresH = aresRoot + '/master/ares.h'
 const aresStrErrC = aresRoot + '/master/ares_strerror.c'
 
+const linuxKern = 'https://raw.githubusercontent.com/torvalds/linux'
+const errnoH = linuxKern + '/master/include/uapi/asm-generic/errno.h'
+
 // captures errno descriptions that look like this:
 //   XX(E2BIG, "argument list too long")
 const errorDesc = /^\s*XX\((E[A-Z_0-9]+),\s*\"(.*)\"\)/
 
 // captures errno definitions that look like this:
 // #define UV__EAI_ADDRFAMILY  (-3000)
-const errorNo = /^#\s*define\s*UV__(E[A-Z_0-9]+)\s*\((\-?[0-9]+)\)/
+const uvErrorNo = /^#define\s*UV__(E[A-Z_0-9]+)\s*\((\-?[0-9]+)\)/
 
 // captures c-ares definitions like this:
 // #define ARES_ENODATA            1
@@ -31,6 +34,10 @@ const caresErr = /^#define\s*(ARES_E[A-Z_0-9]+)\s*([0-9]+)/
 // captures c-ares string descriptions like this:
 //  "unknown",
 const caresStrErr = /^\s*"(.*)"(,?)\s*$/
+
+// capture errno definitions that look like this:
+// #define	ENOSYS		38	/* Invalid system call number */
+const errorNo = /^#define\s*(E[A-Z]+)\s*([0-9]+)\s*\/\*\s*(.*)\s*\*\//
 
 function getData(url) {
   return new Promise((resolve, reject) => {
@@ -45,6 +52,20 @@ function getData(url) {
 
 (async () => {
   const errorCodes = {}
+
+  ;(await getData(errnoH))
+    .split('\n')
+    .map(line => line.match(errorNo))
+    .filter(Boolean)
+    .forEach(match => {
+      const code = match[1]
+
+      errorCodes[code] = {
+        code,
+        errno: parseInt(match[2], 10),
+        description: match[3],
+      }
+    })
 
   ;(await getData(libuvH))
     .split('\n')
@@ -61,7 +82,7 @@ function getData(url) {
 
   ;(await getData(libuvErrnoH))
     .split('\n')
-    .map(line => line.match(errorNo))
+    .map(line => line.match(uvErrorNo))
     .filter(Boolean)
     .forEach(match => {
       const code = match[1]
@@ -115,23 +136,19 @@ function getData(url) {
   errorCodes.EAI_NONAME =
     errorCodes.ENOTFOUND
 
-  const defn = []
-
-  for (const code in errorCodes) {
-    if (errorCodes[code]) {
-      // some errors have this weird behavior in node
-      if (errorCodes[code].errno === undefined) {
-        errorCodes[code].errno = code
-      }
-
-      defn.push([
-        '/**',
-        ` * ${errorCodes[code].description}`,
-        ' */',
-        `export const ${code} = ${JSON.stringify(errorCodes[code], null, 2)}`,
-      ].join('\n'))
+  const defn = Object.keys(errorCodes).sort().map(code => {
+    // some errors have this weird behavior in node
+    if (errorCodes[code].errno === undefined) {
+      errorCodes[code].errno = code
     }
-  }
+
+    return [
+      '/**',
+      ` * ${errorCodes[code].description}`,
+      ' */',
+      `export const ${code} = ${JSON.stringify(errorCodes[code], null, 2)}`,
+    ].join('\n')
+  })
 
   fs.writeFileSync(
     path.resolve(__dirname, '..', 'src', 'frenzie', 'errno.js'),
