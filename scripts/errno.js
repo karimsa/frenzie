@@ -87,7 +87,7 @@ function d(msg) {
     .filter(Boolean)
     .forEach(match => appendErrno(match[1], {
       code: match[1],
-      errno: parseInt(match[2], 10),
+      errno: -parseInt(match[2], 10),
       description: match[3],
     }))
 
