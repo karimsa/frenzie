@@ -22,7 +22,7 @@ const errorDesc = /^\s*XX\((E[A-Z_0-9]+),\s*\"(.*)\"\)/
 
 // captures errno definitions that look like this:
 // #define UV__EAI_ADDRFAMILY  (-3000)
-const errorNo = /^#define\s*UV__(E[A-Z_0-9]+)\s*\((\-?[0-9]+)\)/
+const errorNo = /^#\s*define\s*UV__(E[A-Z_0-9]+)\s*\((\-?[0-9]+)\)/
 
 // captures c-ares definitions like this:
 // #define ARES_ENODATA            1
