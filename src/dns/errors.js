@@ -8,9 +8,7 @@ import { ok as assert } from 'assert'
 import * as errors from '../frenzie/errno'
 import { fakeStack } from '../frenzie/utils'
 
-const mkStack = method => fakeStack([
-  `at Object.${method} (dns.js:139:11)`,
-])
+const mkStack = method => `at Object.${method} (dns.js:139:11)`
 
 function createCaresError(cerr, method, syscall) {
   assert(cerr && cerr.code && cerr.description, 'valid error is required')

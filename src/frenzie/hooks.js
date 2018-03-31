@@ -11,6 +11,7 @@ const config = loadConfig()
 const MODULES = [
   'buffer',
   'dns',
+  'net',
 ]
 
 ///////////////////////////////////////

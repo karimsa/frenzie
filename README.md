@@ -64,6 +64,7 @@ For the possible configurations for each module, see the table below:
 
  - [buffer](src/buffer)
  - [dns](src/dns)
+ - [net](src/net)
 
 ## License
 
