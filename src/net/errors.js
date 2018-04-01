@@ -5,7 +5,7 @@
 
 import * as errno from '../frenzie/errno'
 
-export const CONNECT_ERRORS = [
+export const CONNECT_TO_NET = [
   errno.EADDRINUSE,
   errno.EAGAIN,
   errno.ECONNREFUSED,
